@@ -1,10 +1,13 @@
 import styles from "../styles/Home.module.css";
 import { Tabs, Button } from "antd";
+import { urqlClient, Profile } from "./api/lensCalls";
 
 
 const { TabPane } = Tabs;
 
-export default function Home() {
+export default function Home(profile) {
+
+  console.log(profile);
   
   let nftArray;
   let myNFT;
@@ -17,14 +20,14 @@ export default function Home() {
     <div className={styles.container}>
       <img
         className={styles.banner}
-        src={"https://ipfs.moralis.io:2053/ipfs/QmNgA9MNWFfRaoKzBt21VghQopnKXBgVxzyGvv5qjsV4Vw/media/2"}
+        src={"profile.coverPicture.original.url"}
         alt="cover"
       />
       <div className={styles.profile}>
         <div className={styles.profileLeft}>
           <img
             className={styles.profileImg}
-            src={"https://ipfs.moralis.io:2053/ipfs/QmNgA9MNWFfRaoKzBt21VghQopnKXBgVxzyGvv5qjsV4Vw/media/1"}
+            src={"profile.picture.original.url"}
             alt="profileImg"
           />
           <div className={styles.info}>
@@ -79,3 +82,12 @@ export default function Home() {
   );
 }
 
+export async function getServerSideProps() {
+
+  const response = await urqlClient.query(Profile).toPromise();
+
+  return {
+    props: {profile: response?.data.profile}
+  }
+
+}
